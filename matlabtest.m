@@ -139,8 +139,10 @@ I_BW = imbinarize(I_histeq, 'adaptive');
 close all;
 clear;
 clc;
-I = im2bw(double(rgb2gray(imresize(imread('samling_ex_jobb/sned_bild_011.jpg'), 0.7))/255), 0.5);
-rotI = imrotate(I,33,'crop');
+I = rgb2gray(imresize(imread('samling_ex_jobb/sned_bild_001.jpg'), 0.7));
+% I = im2bw(double(rgb2gray(imresize(imread('samling_ex_jobb/sned_bild_011.jpg'), 0.7))), 0.5);
+I = imrotate(I,90);
+rotI = imrotate(I,33);
 BW = edge(rotI,'canny');
 
 [H,T,R] = hough(BW);
@@ -153,7 +155,7 @@ P  = houghpeaks(H,5,'threshold',ceil(0.3*max(H(:))));
 x = T(P(:,2)); y = R(P(:,1));
 plot(x,y,'s','color','white');
 
-lines = houghlines(BW,T,R,P,'FillGap',5,'MinLength',7);
+lines = houghlines(BW,T,R,P,'FillGap',10,'MinLength',100);
 figure, imshow(rotI), hold on
 max_len = 0;
 for k = 1:length(lines)
