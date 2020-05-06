@@ -1,7 +1,7 @@
 import resize_image
 
 image_folder = "../samling_ex_jobb/*.jpg" #assuming jpg
-size = 'Thumbnail'
+size = 1
 extension = 'png'
 
 resize_image.resize_image(image_folder, size, extension)

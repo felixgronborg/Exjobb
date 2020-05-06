@@ -5,6 +5,7 @@ import pathlib
 from PIL import Image
 from skimage import data, color
 from skimage.transform import rescale, resize, downscale_local_mean
+import sys
 
 def resize_image(image_folder : str, scale: float or str, extension : str):
     
@@ -26,18 +27,22 @@ def resize_image(image_folder : str, scale: float or str, extension : str):
         im = 255 * im # Scale by 255
         im = im.astype(np.uint8) # Make sure data is uint8
 
-        if scale.upper() == "THUMBNAIL":
-            im_scaled = np.empty((128, 128, 3))
-            for i in range (0,3):
-                im_scaled[:,:,i] = resize(im[:,:,i], (128, 128))
-        else:
+        print(isinstance(scale, str), isinstance(scale, float), isinstance(scale, int))
+        if isinstance(scale, str):
+            if scale.upper() == "THUMBNAIL":
+                im_scaled = np.empty((128, 128, 3))
+                for i in range (0,3):
+                    im_scaled[:,:,i] = resize(im[:,:,i], (128, 128))
+        elif isinstance(scale, float) or isinstance(scale, int):
             rows = round(im.shape[0] * scale)
             cols = round(im.shape[1] * scale)
             dims = im.shape[2]
             im_scaled = np.empty((rows, cols, dims))
             for i in range (0,3):
                 im_scaled[:,:,i] = rescale(im[:,:,i], scale, anti_aliasing = False)
-            
+        else:
+            print("Scale is expected as string, float or int")
+            sys.exit()
         im_scaled = im_scaled.astype(np.float64) / np.amax(im_scaled) # Normalize the data in range [0,1]
         im_scaled = 255 * im_scaled # Scale by 255
         im_scaled = im_scaled.astype(np.uint8) # Make sure data is uint8
