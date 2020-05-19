@@ -176,5 +176,99 @@ end
 
 plot(xy_long(:,1),xy_long(:,2),'LineWidth',2,'Color','cyan');
 
+%% Blue Sky
+clear;
+clc;
+close all;
+
+imraw = imread('./images/0.25/22.png'); % Read image, gets values 0-255
+figure;
+imshow(imraw)
+
+R = double(imraw(:,:,1)); % Isolate color channels
+G = double(imraw(:,:,2));
+B = double(imraw(:,:,3));
+
+R_avg = double(zeros(size(R))); % Make empty channels to insert normalized values to
+G_avg = double(zeros(size(G)));
+B_avg = double(zeros(size(B)));
+
+I_avg = zeros(size(imraw)); % Make empty image to insert avg channels into
+
+for row=1:size(imraw,1) % loop through every row in imraw
+    for col=1:size(imraw,2) % loop through every column in imraw
+        red = double(R(row,col));
+        green = double(G(row,col));
+        blue = double(B(row,col));
+        
+        sum =double( red + green + blue);
+        
+        R_avg(row,col) = 255*double(red/sum);
+        G_avg(row,col) = 255*double(green/sum);
+        B_avg(row,col) = 255*double(blue/sum);
+    end
+end
+
+I_avg(:,:,1) = R_avg;
+I_avg(:,:,2) = G_avg;
+I_avg(:,:,3) = B_avg;
+
+figure;
+imshow(I_avg);
+% imnorm = zeros(size(imraw)); % Make new empty image
+% 
+% imnorm(:,:,1) = 255.*R./(R+G+B);% Replace empty image channels with normalized values
+% imnorm(:,:,2) = 255.*G./(R+G+B);
+% imnorm(:,:,3) = 255.*B./(R+G+B);
+% 
+% figure;
+% imshow(imnorm);
+%% Color
+close all;
+clear;
+clc
 
 
+red = imread('C:\Users\Felix\Desktop\Skola\5\exjobb\Git_repo\Exjobb\images\0.25\11.png');
+white = imread('C:\Users\Felix\Desktop\Skola\5\exjobb\Git_repo\Exjobb\images\0.25\1.png');
+image = white;
+HSV_im = rgb2hsv(image);
+
+sat_tolerance = 0.0605;
+[rows, cols, chans] = size(HSV_im);
+max(max(HSV_im(:,:,2)))
+min(min(HSV_im(:,:,2)))
+mean(mean(HSV_im(:,:,2)))
+median(median(HSV_im(:,:,2)))
+counter=0;
+compare = zeros(size(image));
+for row=1:rows
+    for col=1:cols
+        if(abs(HSV_im(row,col,2))<sat_tolerance)  
+            counter = counter + 1;
+            compare(row,col,:) = image(row,col,:);
+        end
+    end
+end
+HSV_im(:,:,2) = 1;
+image=hsv2rgb(HSV_im);
+figure;
+imshow(image)
+hue = 0;
+sat = 0;
+val = 0;
+div = 0;
+for row=1:rows
+    for col=1:cols
+            div = div+1;
+            hue = hue + HSV_im(row,col,1);
+            sat = sat + HSV_im(row,col,2);
+            val = val + HSV_im(row,col,3);
+    end
+end
+avg_hue = hue/div
+avg_sat = sat/div
+avg_val = val/div
+% compare=uint8(compare);
+% figure;
+% imshow(compare);

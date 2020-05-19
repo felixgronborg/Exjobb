@@ -1,14 +1,25 @@
 import resize_image
+import measure_exposure
+import cv2
+import glob
+import numpy as np
 
-image_folder = "../samling_ex_jobb/*.jpg" #assuming jpg
-size = 1
-extension = 'png'
+# resize_image.resize_image(image_folder, size, extension)
 
-resize_image.resize_image(image_folder, size, extension)
+scale = 0.25
 
-# TO DO:
-# Save scaled images to file
-# Make folders with thumbnail size, half, and 1/3 size images
-# Test BW to Gray and Anti-Aliasing
+im_folder = glob.glob('../images/%.2f/*.png' % scale)
+thumb_folder = glob.glob('../images/Thumbnail/*.png')
+im_list = []
+for filename in im_folder:
+    image = cv2.imread(filename)
+    thumb = cv2.imread(thumb_folder[im_folder.index(filename)])
+    print(filename, 'loaded')
+    [avg, median] = measure_exposure.measure_exposure(image)
+    print(avg, median)
+    if(avg < 85):
+        cv2.imshow('avg: %.2f, median: %d' % (avg, median), image)
+        print("DARK IMAGE PLS FIX NOW IMMEDIATELY YES THANKS")
 
-print("shut up")
+cv2.waitKey(0)
+cv2.destroyAllWindows()
