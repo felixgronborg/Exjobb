@@ -10,11 +10,11 @@ def measure_exposure(img):
         img_gray[:,:,i] = gray
     
     img = img_gray
-    hls = cv2.cvtColor(img, cv2.COLOR_BGR2HLS) # Convert both color and gray to HSL
+    hls = cv2.cvtColor(img, cv2.COLOR_BGR2HLS) # Convert to HSL
 
     light_list = np.zeros(256) # Make a list of light values
 
-    for i in range(hls.shape[0]): # Invert the HLS lightness matrix
+    for i in range(hls.shape[0]): # "Invert" the HLS lightness matrix
         for j in range(hls.shape[1]):
             light_list[hls[i,j,1]] = light_list[hls[i,j,1]] + 1
     
